@@ -3,6 +3,7 @@ import re
 import os
 
 def getHtmlContent(url):
+    #需要添加请求头模拟浏览器访问,应对反爬机制
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
@@ -12,7 +13,7 @@ def getHtmlContent(url):
 
 def getPostImages(html):
     # 匹配贴吧帖子中的图片（通常是 BDE_Image 类）
-    img_reg = re.compile(r'<img.*?class="BDE_Image".*?src="(.*?)".*?>')
+    img_reg = re.compile(r'<img.*?class="BDE_Image".*?src="(.*?)".*?>')#正则表达式随要爬取的网页而变化
     imgs = re.findall(img_reg, html)
     
     # 如果没有匹配到，尝试匹配另一种格式（如懒加载图片）
@@ -35,8 +36,8 @@ def downloadImage(img_url, file_path):
         print(f"下载失败 {img_url}: {str(e)}")
 
 def batchDownloadImages(img_urls, path='./tieba_images'):
-    for idx, img_url in enumerate(img_urls, 1):
-        file_name = f"{path}/image_{idx}.{img_url.split('.')[-1].split('?')[0]}"  # 处理带参数的URL
+    for idx, img_url in enumerate(img_urls, 1):#索引从1开始
+        file_name = f"{path}/image_{idx}.{img_url.split('.')[-1].split('?')[0]}"  # 处理带参数的图片URL，取文件扩展名
         downloadImage(img_url, file_name)
 
 def download(url):
